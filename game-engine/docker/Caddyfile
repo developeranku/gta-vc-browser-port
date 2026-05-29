@@ -1,5 +1,0 @@
-engine.gtavice.city:8000 {
-	tls internal
-
-	reverse_proxy 127.0.0.1:{env.IN_PORT}
-}
