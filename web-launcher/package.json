@@ -1,0 +1,17 @@
+{
+  "name": "revc-launcher",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Vice City browser-port launcher. Sandboxed iframe wrapper around the reVCDOS Docker backend.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  }
+}

@@ -1,0 +1,577 @@
+---
+const GAME_URL = import.meta.env.PUBLIC_GAME_URL ?? 'http://162.55.212.139:8000/';
+const SANDBOX = 'allow-scripts allow-same-origin allow-pointer-lock allow-forms allow-popups-to-escape-sandbox allow-modals';
+const ALLOW = 'fullscreen; gamepad; autoplay; clipboard-read; clipboard-write';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0a0a1a" />
+    <link rel="icon" type="image/x-icon" href="/icon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Monoton&family=JetBrains+Mono:wght@400;700&display=swap" />
+    <title>Vice City</title>
+    <script is:inline define:vars={{ GAME_URL }}>
+      window.__GAME_URL__ = GAME_URL;
+    </script>
+  </head>
+  <body>
+    <main class="scene">
+      <div class="stars" aria-hidden="true"></div>
+      <div class="sun" aria-hidden="true"></div>
+      <div class="grid" aria-hidden="true"><div class="grid-inner"></div></div>
+
+      <svg class="palm palm-left" viewBox="0 0 200 600" aria-hidden="true" preserveAspectRatio="xMinYMax meet">
+        <g fill="#06010c">
+          <path d="M92 600 V300 q2 -20 8 -38 q4 -10 10 -16 q-6 14 -8 28 q-2 22 0 38 V600 Z"/>
+          <path d="M100 300 q-40 -28 -88 -32 q34 8 60 28 q14 12 28 28 Z"/>
+          <path d="M100 295 q-46 -10 -96 14 q40 -28 84 -22 q10 2 18 8 Z"/>
+          <path d="M100 295 q-30 -54 -76 -84 q44 12 72 50 q8 14 12 32 Z"/>
+          <path d="M100 295 q12 -56 60 -90 q-30 38 -42 78 q-8 24 -10 42 Z"/>
+          <path d="M100 295 q42 -22 100 -22 q-46 -8 -84 6 q-12 6 -22 14 Z"/>
+          <path d="M100 295 q34 -54 96 -68 q-50 6 -82 38 q-12 14 -20 34 Z"/>
+          <circle cx="100" cy="298" r="6"/>
+          <circle cx="98" cy="292" r="3"/>
+          <circle cx="106" cy="300" r="3"/>
+        </g>
+      </svg>
+
+      <svg class="palm palm-right" viewBox="0 0 200 600" aria-hidden="true" preserveAspectRatio="xMaxYMax meet">
+        <g fill="#06010c">
+          <path d="M104 600 V310 q-2 -22 -10 -38 q-4 -8 -8 -14 q6 12 8 28 q2 22 0 38 V600 Z"/>
+          <path d="M100 310 q40 -32 92 -36 q-36 8 -62 28 q-16 14 -30 30 Z"/>
+          <path d="M100 305 q46 -8 96 16 q-40 -30 -84 -22 q-10 2 -18 8 Z"/>
+          <path d="M100 305 q26 -58 76 -88 q-44 14 -70 52 q-8 14 -12 32 Z"/>
+          <path d="M100 305 q-14 -58 -64 -92 q32 38 44 80 q8 24 10 42 Z"/>
+          <path d="M100 305 q-44 -22 -100 -20 q46 -10 84 4 q12 6 22 14 Z"/>
+          <path d="M100 305 q-34 -54 -94 -68 q48 4 80 36 q12 14 20 34 Z"/>
+          <circle cx="100" cy="308" r="6"/>
+          <circle cx="102" cy="302" r="3"/>
+          <circle cx="94" cy="310" r="3"/>
+        </g>
+      </svg>
+
+      <div class="vignette" aria-hidden="true"></div>
+      <div class="scanlines" aria-hidden="true"></div>
+      <div class="grain" aria-hidden="true"></div>
+
+      <div class="stage">
+        <h1 class="title" data-text="VICE&nbsp;CITY">VICE&nbsp;CITY</h1>
+
+        <button id="play" class="play" type="button" aria-label="Play">
+          <span class="play-inner">
+            <span class="play-glyph" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><polygon points="6,4 6,20 20,12"/></svg>
+            </span>
+            <span class="play-text">PLAY</span>
+          </span>
+        </button>
+      </div>
+    </main>
+
+    <section id="overlay" class="overlay" hidden>
+      <header class="topbar">
+        <div class="topbar-left">
+          <img class="topbar-logo" src="/vice-city-logo.webp" alt="Vice City" />
+        </div>
+        <nav class="topbar-actions" aria-label="Game controls">
+          <button id="fs" class="menu-item" type="button" aria-label="Toggle fullscreen">
+            <svg class="ico-fs" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 9 V4 H9 M15 4 H20 V9 M20 15 V20 H15 M9 20 H4 V15" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" fill="none" stroke="currentColor"/>
+            </svg>
+            <svg class="ico-fs-exit" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 4 V9 H4 M20 9 H15 V4 M15 20 V15 H20 M4 15 H9 V20" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" fill="none" stroke="currentColor"/>
+            </svg>
+            <span class="bar-label" data-default="FULLSCREEN" data-active="WINDOWED">FULLSCREEN</span>
+          </button>
+          <button id="exit" class="menu-item menu-item-exit" type="button" aria-label="Exit">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6 L18 18 M18 6 L6 18" stroke-width="2.4" stroke-linecap="square" fill="none" stroke="currentColor"/>
+            </svg>
+            <span>EXIT</span>
+          </button>
+        </nav>
+      </header>
+      <div class="overlay-stage" id="frame-stage" aria-live="polite"></div>
+    </section>
+
+    <template id="frame-tpl">
+      <iframe
+        class="game-frame"
+        title="Vice City"
+        sandbox={SANDBOX}
+        allow={ALLOW}
+        referrerpolicy="no-referrer"
+        loading="eager"
+      ></iframe>
+    </template>
+
+    <script>
+      import '../scripts/launcher.ts';
+    </script>
+
+    <style is:global>
+      :root {
+        --vc-midnight: #0a0a1a;
+        --vc-deep: #1a0438;
+        --vc-purple: #2a0845;
+        --vc-magenta: #ff2bd6;
+        --vc-rose: #ff006e;
+        --vc-sunset: #ff6b35;
+        --vc-amber: #ffb347;
+        --vc-gold: #ffd84d;
+        --vc-cyan: #00f0ff;
+        --vc-mint: #20c4f4;
+        --vc-sand: #fff3d6;
+        --vc-ink: #06010c;
+
+        --font-display: 'Monoton', 'Faster One', system-ui;
+        --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: var(--vc-ink);
+        color: var(--vc-sand);
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      ::selection { background: var(--vc-magenta); color: var(--vc-ink); }
+
+      .scene {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        isolation: isolate;
+        background:
+          radial-gradient(120% 90% at 50% 78%, rgba(255, 107, 53, 0.0) 38%, rgba(10, 10, 26, 0.9) 70%),
+          linear-gradient(180deg,
+            #050018 0%,
+            #0d022a 18%,
+            #2a0845 38%,
+            #6a0c52 55%,
+            #c61775 68%,
+            #ff5e7d 78%,
+            #ff8a3d 86%,
+            #ffd24d 92%,
+            #2e0a26 100%);
+      }
+
+      .stars {
+        position: absolute; inset: 0 0 50% 0;
+        background-image:
+          radial-gradient(1.2px 1.2px at 12% 18%, rgba(255,255,255,0.9), transparent 60%),
+          radial-gradient(1px 1px at 28% 8%, rgba(255,255,255,0.7), transparent 60%),
+          radial-gradient(1.5px 1.5px at 44% 22%, rgba(255,236,200,0.85), transparent 60%),
+          radial-gradient(1px 1px at 62% 6%, rgba(255,255,255,0.6), transparent 60%),
+          radial-gradient(1.2px 1.2px at 76% 16%, rgba(255,200,230,0.7), transparent 60%),
+          radial-gradient(1px 1px at 88% 4%, rgba(255,255,255,0.7), transparent 60%),
+          radial-gradient(1.5px 1.5px at 8% 32%, rgba(255,255,255,0.5), transparent 60%),
+          radial-gradient(1px 1px at 96% 28%, rgba(255,236,200,0.6), transparent 60%);
+        pointer-events: none;
+      }
+
+      .sun {
+        position: absolute;
+        left: 50%;
+        bottom: 30%;
+        width: min(58vh, 720px);
+        aspect-ratio: 1;
+        transform: translate(-50%, 40%);
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 50% 50%,
+            #fff3a0 0%,
+            #ffd84d 18%,
+            #ff8a3d 42%,
+            #ff3d7f 68%,
+            #c80a5a 84%,
+            transparent 92%);
+        filter: blur(0.5px);
+        z-index: 0;
+      }
+
+      .sun::before {
+        content: '';
+        position: absolute; inset: 0;
+        border-radius: 50%;
+        background:
+          repeating-linear-gradient(0deg,
+            transparent 0 14%,
+            rgba(10, 1, 12, 0.55) 14% 16%,
+            transparent 16% 30%,
+            rgba(10, 1, 12, 0.42) 30% 32%,
+            transparent 32% 50%,
+            rgba(10, 1, 12, 0.30) 50% 52%,
+            transparent 52% 100%);
+        mask: radial-gradient(circle, black 60%, transparent 78%);
+        -webkit-mask: radial-gradient(circle, black 60%, transparent 78%);
+      }
+
+      .grid {
+        position: absolute;
+        left: -10%;
+        right: -10%;
+        bottom: 0;
+        height: 42vh;
+        perspective: 520px;
+        perspective-origin: 50% 0%;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .grid-inner {
+        position: absolute; inset: 0;
+        transform: rotateX(62deg);
+        transform-origin: 50% 0%;
+        background:
+          linear-gradient(180deg, rgba(10, 1, 12, 0) 0%, rgba(10, 1, 12, 0.6) 88%, var(--vc-ink) 100%),
+          repeating-linear-gradient(90deg, transparent 0 60px, rgba(0, 240, 255, 0.85) 60px 61px),
+          repeating-linear-gradient(0deg, transparent 0 60px, rgba(255, 43, 214, 0.85) 60px 61px),
+          linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 80%);
+        background-size: auto, 60px 60px, 60px 60px, auto;
+        animation: grid-scroll 1.4s linear infinite;
+        will-change: background-position;
+      }
+
+      @keyframes grid-scroll {
+        from { background-position: 0 0, 0 0, 0 0, 0 0; }
+        to   { background-position: 0 0, 0 60px, 0 60px, 0 0; }
+      }
+
+      .palm {
+        position: absolute;
+        bottom: 0;
+        height: 78vh;
+        width: auto;
+        max-width: 26vw;
+        z-index: 2;
+        pointer-events: none;
+        filter: drop-shadow(0 0 18px rgba(255, 0, 110, 0.18));
+      }
+      .palm-left { left: -2vw; transform: rotate(-2deg); }
+      .palm-right { right: -2vw; transform: rotate(2deg); }
+
+      .vignette {
+        position: absolute; inset: 0;
+        background: radial-gradient(120% 80% at 50% 50%, transparent 50%, rgba(0,0,0,0.55) 100%);
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .scanlines {
+        position: absolute; inset: 0;
+        background: repeating-linear-gradient(0deg,
+          rgba(255, 255, 255, 0.03) 0 1px,
+          transparent 1px 3px);
+        mix-blend-mode: overlay;
+        z-index: 6;
+        pointer-events: none;
+      }
+
+      .grain {
+        position: absolute; inset: -50%;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.42 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        opacity: 0.08;
+        mix-blend-mode: overlay;
+        z-index: 7;
+        pointer-events: none;
+      }
+
+      .stage {
+        position: relative;
+        z-index: 5;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.5rem;
+        gap: 2.2rem;
+        text-align: center;
+      }
+
+      .title {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: clamp(3.6rem, 12vw, 11rem);
+        line-height: 0.95;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        position: relative;
+        opacity: 0;
+        animation: rise 1.2s 0.18s ease-out forwards;
+        background: linear-gradient(180deg, #ffe9ff 0%, #ff2bd6 48%, #ff6b35 88%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow:
+          0 0 18px rgba(255, 43, 214, 0.55),
+          0 0 44px rgba(255, 43, 214, 0.32);
+        filter: drop-shadow(0 4px 0 rgba(6, 1, 12, 0.4));
+      }
+
+      .title::before, .title::after {
+        content: attr(data-text);
+        position: absolute; inset: 0;
+        pointer-events: none;
+        background: linear-gradient(180deg, #ffe9ff 0%, #ff2bd6 48%, #ff6b35 88%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .title::before {
+        transform: translate(2px, 0);
+        text-shadow: -2px 0 0 var(--vc-cyan);
+        mix-blend-mode: screen;
+        opacity: 0.7;
+      }
+      .title::after {
+        transform: translate(-2px, 0);
+        text-shadow: 2px 0 0 var(--vc-rose);
+        mix-blend-mode: screen;
+        opacity: 0.7;
+      }
+
+      .play {
+        position: relative;
+        display: inline-block;
+        padding: 0;
+        border: 0;
+        background: linear-gradient(180deg, #ff45dd 0%, #ec1c8d 55%, #b8146c 100%);
+        color: #fff8e7;
+        cursor: pointer;
+        transform: skewX(-12deg);
+        box-shadow:
+          0 0 0 2px rgba(255, 248, 231, 0.6) inset,
+          0 0 0 1px rgba(0, 0, 0, 0.55),
+          0 16px 44px rgba(236, 28, 141, 0.5),
+          0 0 90px rgba(236, 28, 141, 0.42);
+        transition: transform 0.18s ease, box-shadow 0.25s ease, background 0.2s ease;
+        opacity: 0;
+        animation: rise 0.9s 0.85s ease-out forwards;
+      }
+
+      .play-inner {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 0.95rem 2.4rem;
+        transform: skewX(12deg);
+        font-family: 'Bebas Neue', 'Oswald', 'Impact', sans-serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(1.55rem, 2.8vw, 2.4rem);
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        text-shadow:
+          0 2px 0 rgba(0, 0, 0, 0.45),
+          1px 0 0 rgba(0, 0, 0, 0.25);
+      }
+
+      .play:hover, .play:focus-visible {
+        transform: skewX(-12deg) translateY(-3px);
+        background: linear-gradient(180deg, #ff6be4 0%, #ff2bd6 55%, #ec1c8d 100%);
+        outline: none;
+      }
+      .play:active {
+        transform: skewX(-12deg) translateY(0);
+        background: linear-gradient(180deg, #ec1c8d 0%, #b8146c 100%);
+      }
+
+      .play-glyph {
+        display: inline-grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        color: #fff8e7;
+        flex-shrink: 0;
+      }
+      .play-glyph svg {
+        width: 22px;
+        height: 22px;
+        fill: currentColor;
+        filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.45));
+      }
+
+      .play-text {
+        white-space: nowrap;
+        padding-top: 4px;
+      }
+
+      @keyframes rise {
+        from { transform: translateY(14px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      .overlay {
+        position: fixed; inset: 0;
+        z-index: 50;
+        background: var(--vc-ink);
+        display: grid;
+        grid-template-rows: auto 1fr;
+      }
+      .overlay[hidden] { display: none; }
+
+      .overlay-stage {
+        position: relative;
+        background: var(--vc-ink);
+        overflow: hidden;
+        min-height: 0;
+      }
+      .game-frame {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+        background: var(--vc-ink);
+      }
+
+      .topbar {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        gap: 1rem;
+        height: 56px;
+        padding: 0 14px 0 16px;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.98) 0%, rgba(8, 0, 12, 0.96) 100%);
+        border-bottom: 2px solid #ec1c8d;
+        box-shadow:
+          0 6px 24px rgba(0, 0, 0, 0.7),
+          0 0 28px rgba(236, 28, 141, 0.25),
+          inset 0 -3px 0 0 rgba(0, 0, 0, 0.4);
+      }
+
+      .topbar::after {
+        content: '';
+        position: absolute;
+        left: 0; right: 0;
+        bottom: -5px;
+        height: 1px;
+        background: rgba(236, 28, 141, 0.35);
+        filter: blur(2px);
+        pointer-events: none;
+      }
+
+      .topbar-left {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .topbar-logo {
+        height: 34px;
+        width: auto;
+        display: block;
+        user-select: none;
+        filter:
+          drop-shadow(0 0 6px rgba(236, 28, 141, 0.55))
+          drop-shadow(0 1px 0 rgba(0, 0, 0, 0.7));
+        image-rendering: -webkit-optimize-contrast;
+      }
+
+      .topbar-actions {
+        display: inline-flex;
+        align-items: stretch;
+        gap: 2px;
+      }
+
+      .menu-item {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0 1.05rem;
+        border: 0;
+        background: transparent;
+        color: #fff8e7;
+        font-family: 'Bebas Neue', 'Oswald', 'Impact', sans-serif;
+        font-weight: 400;
+        font-size: 1.18rem;
+        letter-spacing: 0.18em;
+        font-style: italic;
+        text-transform: uppercase;
+        cursor: pointer;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.85);
+        transition: color 0.12s ease, background 0.12s ease;
+      }
+
+      .menu-item::after {
+        content: '';
+        position: absolute;
+        left: 8%;
+        right: 8%;
+        bottom: 6px;
+        height: 2px;
+        background: transparent;
+        transition: background 0.12s ease;
+      }
+
+      .menu-item svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        transform: translateY(-1px);
+      }
+      .menu-item .ico-fs-exit { display: none; }
+
+      .menu-item:hover,
+      .menu-item:focus-visible {
+        background: #ec1c8d;
+        color: #0a0010;
+        outline: none;
+        text-shadow: none;
+      }
+      .menu-item:hover::after,
+      .menu-item:focus-visible::after {
+        background: #fff8e7;
+      }
+      .menu-item:active {
+        background: #b8146c;
+        color: #0a0010;
+      }
+
+      .overlay[data-fs="on"] .menu-item .ico-fs { display: none; }
+      .overlay[data-fs="on"] .menu-item .ico-fs-exit { display: inline-block; }
+
+      .menu-item-exit {
+        color: #ec1c8d;
+        background: transparent;
+      }
+      .menu-item-exit:hover,
+      .menu-item-exit:focus-visible {
+        background: #ec1c8d;
+        color: #0a0010;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .grid-inner { animation: none !important; }
+        .title, .play { animation: none !important; opacity: 1; }
+      }
+
+      @media (max-width: 640px) {
+        .palm { max-width: 38vw; height: 60vh; opacity: 0.92; }
+      }
+
+      @media (max-width: 520px) {
+        .topbar { height: 48px; padding: 0 8px 0 10px; }
+        .topbar-logo { height: 28px; }
+        .menu-item { padding: 0 0.7rem; font-size: 1rem; letter-spacing: 0.14em; }
+        .menu-item span { display: none; }
+      }
+    </style>
+  </body>
+</html>

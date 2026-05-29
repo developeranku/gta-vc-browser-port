@@ -1,0 +1,41 @@
+services:
+  revcdos:
+    hostname: reVCDOS
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "${OUT_HOST-0.0.0.0}:${OUT_PORT-8000}:${IN_PORT-8000}"
+    volumes:
+      - .:/app
+    networks:
+      - default
+    environment:
+      - AUTH_LOGIN=${AUTH_LOGIN:-}
+      - AUTH_PASSWORD=${AUTH_PASSWORD:-}
+      - CUSTOM_SAVES=${CUSTOM_SAVES:-}
+      - IN_PORT=${IN_PORT:-8000}
+      - VCSKY_LOCAL=${VCSKY_LOCAL:-}
+      - VCBR_LOCAL=${VCBR_LOCAL:-}
+      - VCSKY_URL=${VCSKY_URL:-}
+      - VCBR_URL=${VCBR_URL:-}
+      - VCSKY_CACHE=${VCSKY_CACHE:-}
+      - VCBR_CACHE=${VCBR_CACHE:-}
+      - PACKED=${PACKED:-}
+      - UNPACKED=${UNPACKED:-}
+      - PACK=${PACK:-}
+    command: >
+      sh -c "python server.py
+      --port $${IN_PORT:-8000}
+      $$([ -n \"$$AUTH_LOGIN\" ] && [ -n \"$$AUTH_PASSWORD\" ] && echo \"--login $$AUTH_LOGIN --password $$AUTH_PASSWORD\" || echo '')
+      $$([ \"$$CUSTOM_SAVES\" = '1' ] && echo '--custom_saves' || echo '')
+      $$(if [ \"$$VCSKY_LOCAL\" = '1' ]; then echo '--vcsky_local'; elif [ -n \"$$VCSKY_LOCAL\" ]; then echo \"--vcsky_local $$VCSKY_LOCAL\"; fi)
+      $$(if [ \"$$VCBR_LOCAL\" = '1' ]; then echo '--vcbr_local'; elif [ -n \"$$VCBR_LOCAL\" ]; then echo \"--vcbr_local $$VCBR_LOCAL\"; fi)
+      $$([ -n \"$$VCSKY_URL\" ] && echo \"--vcsky_url $$VCSKY_URL\" || echo '')
+      $$([ -n \"$$VCBR_URL\" ] && echo \"--vcbr_url $$VCBR_URL\" || echo '')
+      $$([ \"$$VCSKY_CACHE\" = '1' ] && echo '--vcsky_cache' || echo '')
+      $$([ \"$$VCBR_CACHE\" = '1' ] && echo '--vcbr_cache' || echo '')
+      $$([ -n \"$$PACKED\" ] && echo \"--packed $$PACKED\" || echo '')
+      $$([ -n \"$$UNPACKED\" ] && echo \"--unpacked $$UNPACKED\" || echo '')
+      $$([ -n \"$$PACK\" ] && echo \"--pack $$PACK\" || echo '')"
+    restart: unless-stopped

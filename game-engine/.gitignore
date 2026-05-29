@@ -1,0 +1,11 @@
+*.pyc
+__pycache__/
+*.$py.class
+
+.DS_Store
+
+vcbr/
+vcsky/
+saves/
+unpacked/
+*.bin
