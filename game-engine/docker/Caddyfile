@@ -1,0 +1,12 @@
+{
+	email {env.ACME_EMAIL}
+	auto_https disable_redirects
+}
+
+engine.gtavice.city:8000 {
+	tls {
+		dns cloudflare {env.CF_API_TOKEN}
+	}
+
+	reverse_proxy 127.0.0.1:{env.IN_PORT}
+}
