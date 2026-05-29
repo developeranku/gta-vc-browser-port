@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-const GAME_URL = window.__GAME_URL__ || 'https://engine.gtavice.city:8000';
+const GAME_URL = window.__GAME_URL__ || 'https://engine.gtavice.city:8443';
 
 const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
 

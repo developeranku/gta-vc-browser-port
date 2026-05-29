@@ -3,7 +3,7 @@
 A small Astro frontend that wraps the [game-engine](../game-engine) browser port of GTA: Vice City inside a sandboxed iframe, with a Vice City themed landing page.
 
 ```
-web-launcher (Astro, :4321)  ──iframe──►  game-engine (Docker, :8000)
+web-launcher (Astro, :4321)  ──iframe──►  game-engine (Docker, :8443)
                   ▲
                   └── you open http://localhost:4321 in the browser
 ```
@@ -21,7 +21,7 @@ cd ../game-engine
 docker compose up -d --build
 ```
 
-Wait until `http://localhost:8000` responds (the first build downloads the asset archive, can take a minute).
+Wait until `http://localhost:8443` responds (the first build downloads the asset archive, can take a minute).
 
 ### 2. Install + run the wrapper
 
@@ -35,7 +35,7 @@ Open http://localhost:4321 and click **PRESS PLAY**.
 
 ## Configuration
 
-The iframe target is set by `PUBLIC_GAME_URL`. Default: `http://localhost:8000`.
+The iframe target is set by `PUBLIC_GAME_URL`. Default: `http://localhost:8443`.
 
 ```bash
 cp .env.example .env
@@ -46,7 +46,7 @@ Examples:
 
 ```bash
 PUBLIC_GAME_URL=http://localhost:3000   # custom port
-PUBLIC_GAME_URL=http://192.168.1.50:8000  # backend on LAN
+PUBLIC_GAME_URL=http://192.168.1.50:8443  # backend on LAN
 ```
 
 ## How the sandbox works

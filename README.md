@@ -7,12 +7,12 @@ Self-hostable GTA Vice City that runs in the browser. Two pieces: a backend that
 ```bash
 docker run -d \
   --name gtavc-engine \
-  -p 8000:8000 \
+  -p 8443:8443 \
   --restart unless-stopped \
   ghcr.io/developeranku/gta-vc-browser-port-engine:latest
 ```
 
-Open `http://localhost:8000` and play.
+Open `http://localhost:8443` and play.
 
 The image has `PACKED=https://folder.morgen.qzz.io/revcdos.bin` baked in, so first start downloads the asset archive once and serves from it.
 

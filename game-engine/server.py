@@ -16,7 +16,7 @@ from additions.packed import init_packed_archive, get_packed_file, is_initialize
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils'))
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--port", type=int, default=8000)
+parser.add_argument("--port", type=int, default=8443)
 parser.add_argument("--custom_saves", action="store_true")
 parser.add_argument("--login", type=str)
 parser.add_argument("--password", type=str)

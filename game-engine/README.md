@@ -9,12 +9,12 @@ The published image at `ghcr.io/developeranku/gta-vc-browser-port-engine:latest`
 ```bash
 docker run -d \
   --name gtavc-engine \
-  -p 8000:8000 \
+  -p 8443:8443 \
   --restart unless-stopped \
   ghcr.io/developeranku/gta-vc-browser-port-engine:latest
 ```
 
-Open `http://localhost:8000`. First start downloads the asset archive once and serves from it.
+Open `http://localhost:8443`. First start downloads the asset archive once and serves from it.
 
 To update later:
 
@@ -49,15 +49,15 @@ pip install -r requirements.txt
 python server.py --packed https://folder.morgen.qzz.io/revcdos.bin
 ```
 
-Server listens on `http://localhost:8000`.
+Server listens on `http://localhost:8443`.
 
 ## Compose env vars
 
 | Variable | Default | Description |
 |---|---|---|
 | `OUT_HOST` | `0.0.0.0` | External bind host |
-| `OUT_PORT` | `8000` | External port |
-| `IN_PORT` | `8000` | Internal container port |
+| `OUT_PORT` | `8443` | External port |
+| `IN_PORT` | `8443` | Internal container port |
 | `AUTH_LOGIN` | none | HTTP Basic Auth username |
 | `AUTH_PASSWORD` | none | HTTP Basic Auth password |
 | `CUSTOM_SAVES` | off | `1` to enable local saves |
@@ -77,7 +77,7 @@ HTTP Basic Auth is only on when both `AUTH_LOGIN` and `AUTH_PASSWORD` are set.
 
 | Flag | Description |
 |---|---|
-| `--port` | Server port (default `8000`) |
+| `--port` | Server port (default `8443`) |
 | `--packed <path-or-url>` | Serve from packed `.bin` archive |
 | `--unpacked <path-or-url>` | Unpack to `unpacked/{md5}/` and serve |
 | `--pack <folder-or-hash>` | Pack folder, then serve from result |
@@ -101,7 +101,7 @@ HTTP Basic Auth is only on when both `AUTH_LOGIN` and `AUTH_PASSWORD` are set.
 | `configurable` | `1` | Show config UI before play |
 | `request_original_game` | `1` | Prompt for original game files |
 
-Examples: `http://localhost:8000/?lang=ru`, `http://localhost:8000/?cheats=1&max_fps=60`.
+Examples: `http://localhost:8443/?lang=ru`, `http://localhost:8443/?cheats=1&max_fps=60`.
 
 ## Local saves
 
