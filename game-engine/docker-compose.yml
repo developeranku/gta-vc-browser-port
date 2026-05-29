@@ -2,5 +2,5 @@ services:
   revcdos:
     image: ghcr.io/developeranku/gta-vc-browser-port-engine:latest
     ports:
-      - "8443:8443"
+      - "8443:8000"
     restart: unless-stopped
